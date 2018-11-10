@@ -93,7 +93,29 @@ ps <- ps %>%
   mutate(Item_group = trimws(Item_group)) %>% 
   mutate(Item_group = gsub(" s$", "", Item_group))
 
+final <- ps %>%
+  dplyr::select(Item_group, ECO_status, ECO_visible,
+                actual_inv_cost_perunit, 
+                actual_addon_cost_perunit,
+                Gross_profit_per_muom,
+                Ave_price_each) %>%
+  rename(customer_to_farmer = actual_inv_cost_perunit,
+         customer_to_logistics = actual_addon_cost_perunit,
+         customer_to_RT = Gross_profit_per_muom,
+         total_customer_price = Ave_price_each)
 
+
+# TO DO, remove Eco from Apple Eco Fuji (it has an E in the itemcode)
+# gsub out "bu" from the end of item_group
+# McIntosh vs mcintosh
+# Red Apple Delicious spelling rename them to Red Apple D
+# remove white space
+# remove double spacing between words
+# filtered in alphabethical order
+# FCY/XFCY
+# HRML vs Hrml
+
+ps %>% filter(Item_group == "Apple Eco Fuji") %>% View()
 
 
 
