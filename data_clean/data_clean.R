@@ -4,6 +4,7 @@ library(openxlsx)
 ##### Read files
 
 path_dir <- "./data/redtomato"
+output_dir <- "./data/redtomato/output"
 
 pur <- read.xlsx(file.path(path_dir, "Purchase History/Pur_History_2014-2018.xlsx"), startRow = 4)
 sal <- read.xlsx(file.path(path_dir, "Sales History/Sales Data 2014-2018.xlsx"), startRow = 5)
@@ -104,6 +105,7 @@ final <- ps %>%
          customer_to_RT = Gross_profit_per_muom,
          total_customer_price = Ave_price_each)
 
+write.csv(final, file.path(output_dir, "cleaned_data.csv"), row.names = FALSE)
 
 # TO DO, remove Eco from Apple Eco Fuji (it has an E in the itemcode)
 # gsub out "bu" from the end of item_group
@@ -115,7 +117,7 @@ final <- ps %>%
 # FCY/XFCY
 # HRML vs Hrml
 
-ps %>% filter(Item_group == "Apple Eco Fuji") %>% View()
+unique(final$Item_group)
 
 
 
