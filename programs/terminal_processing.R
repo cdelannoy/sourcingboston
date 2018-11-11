@@ -40,4 +40,4 @@ terminal_avg <- terminal_data %>%
   na.omit() %>% 
   select(variety = Variety, region, overall_avg)
 
-write.csv(terminal_avg, file.path(output_dir, "terminal_boston.csv"))
+write_csv(terminal_avg, file.path(output_dir, "terminal_boston.csv"))

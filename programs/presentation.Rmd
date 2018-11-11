@@ -1,0 +1,55 @@
+---
+title: ""
+output: 
+  revealjs::revealjs_presentation:
+    theme: moon
+    mathjax: local
+    includes:
+    self_contained: false
+    reveal_plugins: ["notes", "menu"]
+    reveal_options:
+      slideNumber: true
+      progress: true
+      history: true
+      overview: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(png)
+library(grid)
+```
+
+## Red Tomato Cost Analysis
+
+
+```{r}
+img1 <- readPNG("../images/redtomato.png")
+ grid.raster(img1)
+```
+
+## Questions
+
+* Are farmers making more for eco products?
+* Are customers paying more for eco products?
+* What percentage of items that get sold as eco to retailers get sold to consumers (regular people doing grocery shopping) as such?
+* How do these numbers compare to national prices (based on terminal data)?
+
+## Data cleaning
+
+## Demos: 
+* shiny app
+* more robust d3 web app
+
+```{r}
+img2 <- readPNG("../images/RT_webapp.png")
+ grid.raster(img2)
+```
+
+
+## Final thoughts
+
+* next steps:
+    * make a package
+    * finish the (more robust) web app
+* repository (fork): https://github.com/cdelannoy/sourcingboston 
