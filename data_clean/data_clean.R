@@ -142,15 +142,15 @@ final <- final[c(
   "total_customer_price"
 )]
 
+
+
+# Dataset for Olivia's graph
 final_temp <- final %>% 
   group_by(Item_group_clean, ECO_status, ECO_visible) %>% 
   summarize(customer_to_farmer = mean(customer_to_farmer),
             customer_to_logistics = mean(customer_to_logistics),
             customer_to_RT = mean(customer_to_RT),
             total_customer_price = mean(total_customer_price))
-
-
-# Dataset for Olivia's graph
 
 write.csv(final_temp, file.path(output_dir, "cleaned_data_final.csv"), row.names = FALSE)
 
@@ -163,7 +163,6 @@ final2 <- final %>%
 
 
 # Dataset for terminal merging
-
 final_for_terminal <- final %>% 
   group_by(Item_group_clean, ECO_status) %>% 
   summarize(customer_to_farmer = mean(customer_to_farmer),
