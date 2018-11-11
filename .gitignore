@@ -1,4 +1,4 @@
 *R project files
 *.Rproj.user/
-*Rproj
+*.Rproj
 data/
