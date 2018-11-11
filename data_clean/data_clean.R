@@ -188,3 +188,38 @@ final_pie <- final_pie %>%
 final_pie <- final_pie %>% filter(ECO_status)
 
 write.csv(final_pie, file.path(output_dir, "pie_data.csv"), row.names = FALSE)
+
+###################
+# pie chart
+###############
+
+library(ggplot2)
+install.packages("waffle")
+
+one <- final_pie %>% filter(Item_group_clean == "Apple Cortland")
+
+one_vec <- c()
+
+for (row in 1:nrow(one)) {
+  one_vec <- c(one_vec, rep(one$ECO_visible[row], one$received_quantity[row]))
+}
+  
+waffle(one_vec, rows = round(length(one_vec)/6))
+
+
+# Simple Pie Chart
+one <- final_pie %>% filter(Item_group_clean == "Apple Cortland")
+
+eco_viz <- c()
+n <- c()
+
+
+for (row in 1:nrow(one)) {
+  n <- c(n, one$received_quantity[row])
+  eco_viz <- c(eco_viz, one$ECO_visible[row])
+
+}
+
+pie(n, labels = eco_viz, main="For ECO apples, was ECOApple label visible to consumers?")
+
+       
