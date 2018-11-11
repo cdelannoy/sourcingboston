@@ -3,9 +3,9 @@ function createVisualization() {
     // adapted from https://bl.ocks.org/mbostock/3887051
     var svg = d3.select("svg"),
     margin = {
-        top: 40, 
-        right: 20, 
-        bottom: 50, 
+        top: 40,
+        right: 20,
+        bottom: 50,
         left: 50
     },
     width = +svg.attr("width") - margin.left - margin.right,
@@ -28,7 +28,7 @@ function createVisualization() {
     d3.csv("cleaned_data.csv", function(d) {
       return d;
     },
-    
+
     function(error, data) {
         if (error) throw error;
 
@@ -43,11 +43,11 @@ function createVisualization() {
 
         x0.domain(productData.map(function(d) { return d.group; }));
         x1.domain(prices).rangeRound([0, x0.bandwidth()]);
-        y.domain([0, 
+        y.domain([0,
             d3.max(productData, function(d) {
-                return d3.max(prices, function(price) { 
-                    return d[price]; 
-                }); 
+                return d3.max(prices, function(price) {
+                    return d[price];
+                });
             })])
         .nice();
 
@@ -59,9 +59,9 @@ function createVisualization() {
             .attr("transform", function(d) { return "translate(" + x0(d.group) + ",0)"; })
             .selectAll("rect")
             .data(function(d) {
-                return prices.map(function(price) { 
-                    return {key: price, value: d[price]}; 
-                }); 
+                return prices.map(function(price) {
+                    return {key: price, value: d[price]};
+                });
             })
             .enter().append("rect")
             .attr('class', 'bar')
@@ -144,11 +144,11 @@ function createVisualization() {
             productData = getProductData(data, event.target.value);
             var duration = 1000;
 
-            y.domain([0, 
+            y.domain([0,
                 d3.max(productData, function(d) {
-                    return d3.max(prices, function(price) { 
-                        return d[price]; 
-                    }); 
+                    return d3.max(prices, function(price) {
+                        return d[price];
+                    });
                 })])
             .nice();
 
@@ -163,19 +163,19 @@ function createVisualization() {
                 .data(productData)
                 .selectAll('.bar')
                 .data(function(d) {
-                    return prices.map(function(price) { 
-                        return {key: price, value: d[price]}; 
-                    }); 
+                    return prices.map(function(price) {
+                        return {key: price, value: d[price]};
+                    });
                 });
 
             bars
                 .transition()
                 .duration(duration)
-                .attr("y", function(d) { 
-                    return y(d.value); 
+                .attr("y", function(d) {
+                    return y(d.value);
                 })
-                .attr("height", function(d) { 
-                    return height - y(d.value); 
+                .attr("height", function(d) {
+                    return height - y(d.value);
                 });
         });
 
@@ -190,16 +190,20 @@ function convertToNumeric(data) {
             x[y] = +x[y];
         });
         x.ECO_status = x.ECO_status === "TRUE" ? 1 : 0;
+        x.Item_group = x.Item_group.trim();
     });
 }
 
 function createDropdownOptions(data) {
-    var options = data.filter(x => x.ECO_status == 1);
+    var hasECO = Array.from(new Set(data.filter(x => x.ECO_status == 1).map(x => x.Item_group)));
+    var hasNonECO = Array.from(new Set(data.filter(x => x.ECO_status == 0).map(x => x.Item_group)));
+    var options = Array.from(new Set(data.map(x => x.Item_group))).filter(x => hasECO.indexOf(x) >= 0 && hasNonECO.indexOf(x) >= 0).sort();
+
     var dropdown = document.getElementById("dropdown");
     options.forEach(x => {
         var currOption = document.createElement("option");
-        currOption.text = x.Item_group;
-        currOption.value = x.Item_group;
+        currOption.text = x;
+        currOption.value = x;
         dropdown.appendChild(currOption);
     });
 }
