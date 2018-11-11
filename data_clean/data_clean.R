@@ -95,6 +95,11 @@ ps <- ps %>%
   mutate(Item_group = trimws(Item_group)) %>% 
   mutate(Item_group = gsub(" s$", "", Item_group))
 
+
+################################################################################
+# Dataset for Olivia's graph & terminal merging
+################################################################################
+
 final <- ps %>%
   dplyr::select(Item_group, ECO_status, ECO_visible,
                 actual_inv_cost_perunit, 
@@ -106,15 +111,6 @@ final <- ps %>%
          customer_to_RT = Gross_profit_per_muom,
          total_customer_price = Ave_price_each)
 
-# TO DO, remove Eco from Apple Eco Fuji (it has an E in the itemcode)
-# gsub out "bu" from the end of item_group
-# McIntosh vs mcintosh
-# Red Apple Delicious spelling rename them to Red Apple D
-# remove white space
-# remove double spacing between words
-# filtered in alphabethical order
-# FCY/XFCY
-# HRML vs Hrml
 
 final <- final %>% 
   mutate(Item_group_clean = tolower(Item_group))
@@ -125,6 +121,8 @@ final <- final %>%
          Item_group_clean = trimws(Item_group_clean),
          Item_group_clean = gsub("eco", "", Item_group_clean),
          Item_group_clean = gsub(".*apple red d.*", "apple red delicious", Item_group_clean),
+         Item_group_clean = gsub(".*apple golden d.*", "apple golden delicious", Item_group_clean),
+         Item_group_clean = gsub("grannysmith", "granny smith", Item_group_clean),
          Item_group_clean = gsub("  ", " ", Item_group_clean),
          Item_group_clean = tools::toTitleCase(Item_group_clean)) 
 
@@ -142,27 +140,6 @@ final <- final[c(
   "total_customer_price"
 )]
 
-
-
-# Dataset for Olivia's graph
-final_temp <- final %>% 
-  group_by(Item_group_clean, ECO_status, ECO_visible) %>% 
-  summarize(customer_to_farmer = mean(customer_to_farmer),
-            customer_to_logistics = mean(customer_to_logistics),
-            customer_to_RT = mean(customer_to_RT),
-            total_customer_price = mean(total_customer_price))
-
-write.csv(final_temp, file.path(output_dir, "cleaned_data_final.csv"), row.names = FALSE)
-
-# Pie chart
-final2 <- final %>% 
-
-
-
-
-
-
-# Dataset for terminal merging
 final_for_terminal <- final %>% 
   group_by(Item_group_clean, ECO_status) %>% 
   summarize(customer_to_farmer = mean(customer_to_farmer),
@@ -171,3 +148,43 @@ final_for_terminal <- final %>%
             total_customer_price = mean(total_customer_price))
 
 write.csv(final_for_terminal, file.path(output_dir, "cleaned_data_final_constance.csv"), row.names = FALSE)
+
+################################################################################
+# Dataset for Pie chart
+################################################################################
+
+final_pie <- ps %>% select(Item_group, ECO_status, ECO_visible, received_quantity_tot) 
+
+final_pie <- final_pie %>% 
+  mutate(Item_group_clean = tolower(Item_group))
+
+final_pie <- final_pie %>% 
+  mutate(Item_group_clean = trimws(Item_group_clean),
+         Item_group_clean = gsub(" bu$", "", Item_group_clean),
+         Item_group_clean = trimws(Item_group_clean),
+         Item_group_clean = gsub("eco", "", Item_group_clean),
+         Item_group_clean = gsub(".*apple red d.*", "apple red delicious", Item_group_clean),
+         Item_group_clean = gsub(".*apple golden d.*", "apple golden delicious", Item_group_clean),
+         Item_group_clean = gsub("grannysmith", "granny smith", Item_group_clean),
+         Item_group_clean = gsub("  ", " ", Item_group_clean),
+         Item_group_clean = tools::toTitleCase(Item_group_clean)) 
+
+
+final_pie <- final_pie[order(final_pie$Item_group_clean),]
+
+
+final_pie <- final_pie[c(
+  "Item_group_clean",
+  "ECO_status",
+  "ECO_visible",
+  "received_quantity_tot"
+)]
+
+
+
+final_pie <- final_pie %>% 
+  group_by(Item_group_clean, ECO_status, ECO_visible) %>% 
+  summarize(received_quantity = sum(received_quantity_tot))
+final_pie <- final_pie %>% filter(ECO_status)
+
+write.csv(final_pie, file.path(output_dir, "pie_data.csv"), row.names = FALSE)
