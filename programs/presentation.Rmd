@@ -1,0 +1,29 @@
+---
+title: Rare events progress update
+output: 
+  revealjs::revealjs_presentation:
+    theme: moon
+    mathjax: local
+    includes:
+    self_contained: false
+    reveal_plugins: ["notes", "menu"]
+    reveal_options:
+      slideNumber: true
+      progress: true
+      history: true
+      overview: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(png)
+library(grid)
+```
+
+# Red Tomato
+
+## 
+
+
+
+
