@@ -39,8 +39,10 @@ img1 <- readPNG("../images/redtomato.png")
 
 * The data that we investigated were Red Tomato’s purchase history and sales history 2014-2018.
 * Purchase history: includes every order that every customer placed of every type of each species of produce, and how much it cost the customer to pay the farmers and the fees 
-* Sales history: includes aggregate data on Red Tomato profits by every type of each species of produce 
-* Final cleaned data: Apple species, ECOApple status, ECOApple visibility, Customer cost of farmer, Customer cost to logistics, Customer to RT, Total customer price
+* Sales history
+    * includes aggregate data on Red Tomato profits by every type of each species of produce 
+* Final cleaned data
+    * Apple species, ECOApple status, ECOApple visibility, Customer cost of farmer, Customer cost to logistics, Customer to RT, Total customer price
 * Data checks for quality assurance between Sales and Purchase data
 
 
@@ -56,6 +58,10 @@ img2 <- readPNG("../images/RT_webapp.png")
 
 ## Final thoughts
 
+* what we delivered:
+    * R package to process data
+    * shiny app
+    * d3 web app
 * next steps:
     * make a package
     * finish the (more robust) web app
