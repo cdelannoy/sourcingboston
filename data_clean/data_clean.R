@@ -27,8 +27,8 @@ pur_g <- pur %>%
   mutate(actual_inv_cost_perunit = actual_inv_cost_tot / received_quantity_tot,
          actual_addon_cost_perunit =  actual_addon_cost_tot / received_quantity_tot,
          tot_cost_perunit = actual_inv_cost_perunit + actual_addon_cost_perunit) 
-  pur_g %>% View()
-  
+pur_g %>% View()
+
 pur_g  %>% filter( !(Itemcode %in% sal$Itemcode)) %>%  
   filter(!(received_quantity_tot == 0 | actual_inv_cost_tot == 0)) %>%
   View()
@@ -148,15 +148,27 @@ final_temp <- final %>%
             customer_to_logistics = mean(customer_to_logistics),
             customer_to_RT = mean(customer_to_RT),
             total_customer_price = mean(total_customer_price))
-         
 
-# Get rid of negative values
+
+# Dataset for Olivia's graph
 
 write.csv(final_temp, file.path(output_dir, "cleaned_data_final.csv"), row.names = FALSE)
 
-
-# Olivia's graph
-# just cleaned_data_final.csv
-
 # Pie chart
 final2 <- final %>% 
+
+
+
+
+
+
+# Dataset for terminal merging
+
+final_for_terminal <- final %>% 
+  group_by(Item_group_clean, ECO_status) %>% 
+  summarize(customer_to_farmer = mean(customer_to_farmer),
+            customer_to_logistics = mean(customer_to_logistics),
+            customer_to_RT = mean(customer_to_RT),
+            total_customer_price = mean(total_customer_price))
+
+write.csv(final_for_terminal, file.path(output_dir, "cleaned_data_final_constance.csv"), row.names = FALSE)
