@@ -130,12 +130,33 @@ final <- final %>%
 
 
 final <- final[order(final$Item_group_clean),]
+
+
+final <- final[c(
+  "Item_group_clean",
+  "ECO_status",
+  "ECO_visible",
+  "customer_to_farmer",
+  "customer_to_logistics",
+  "customer_to_RT",
+  "total_customer_price"
+)]
+
+final_temp <- final %>% 
+  group_by(Item_group_clean, ECO_status, ECO_visible) %>% 
+  summarize(customer_to_farmer = mean(customer_to_farmer),
+            customer_to_logistics = mean(customer_to_logistics),
+            customer_to_RT = mean(customer_to_RT),
+            total_customer_price = mean(total_customer_price))
          
 
 # Get rid of negative values
-final_final <- final %>% filter(customer_to_RT >= 0)
 
-write.csv(final, file.path(output_dir, "cleaned_data_final.csv"), row.names = FALSE)
-
+write.csv(final_temp, file.path(output_dir, "cleaned_data_final.csv"), row.names = FALSE)
 
 
+# Olivia's graph
+# just cleaned_data_final.csv
+
+# Pie chart
+final2 <- final %>% 
