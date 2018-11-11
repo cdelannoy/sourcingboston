@@ -25,7 +25,7 @@ function createVisualization() {
     var z = d3.scaleOrdinal()
         .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 
-    d3.csv("https://github.com/cdelannoy/sourcingboston/blob/master/data/redtomato/output/cleaned_data.csv", function(d) {
+    d3.csv("cleaned_data.csv", function(d) {
       return d;
     },
     
