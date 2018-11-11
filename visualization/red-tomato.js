@@ -25,7 +25,7 @@ function createVisualization() {
     var z = d3.scaleOrdinal()
         .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 
-    d3.csv("sample.csv", function(d) {
+    d3.csv("cleaned_data.csv", function(d) {
       return d;
     },
     
@@ -183,43 +183,48 @@ function createVisualization() {
 };
 
 function convertToNumeric(data) {
-    var numericColumns = ["Farmer_Price", "RT_Price", "Retail_Price", "ECO_Indicator", "Sold_ECO_Indicator"];
+    var numericColumns = ["customer_to_farmer", "customer_to_logistics", "customer_to_RT", "total_customer_price"];
 
     data.forEach(x => {
         numericColumns.forEach(y => {
             x[y] = +x[y];
-        })
+        });
+        x.ECO_status = x.ECO_status === "TRUE" ? 1 : 0;
     });
 }
 
 function createDropdownOptions(data) {
-    var options = data.filter(x => x.ECO_Indicator == 1);
+    var options = data.filter(x => x.ECO_status == 1);
     var dropdown = document.getElementById("dropdown");
     options.forEach(x => {
         var currOption = document.createElement("option");
-        currOption.text = x.Group;
-        currOption.value = x.Group;
+        currOption.text = x.Item_group;
+        currOption.value = x.Item_group;
         dropdown.appendChild(currOption);
     });
 }
 
 function getProductData(data, selectedProductName) {
-    var selectedProduct = data.filter(x => x.Group == selectedProductName);
-    var eco = selectedProduct.filter(x => x.ECO_Indicator == 1)[0];
-    var nonEco = selectedProduct.filter(x => x.ECO_Indicator == 0)[0];
+    var selectedProduct = data.filter(x => x.Item_group == selectedProductName);
+    var eco = selectedProduct.filter(x => x.ECO_status == 1)[0];
+    var nonEco = selectedProduct.filter(x => x.ECO_status == 0)[0];
 
     return [{
         group: "Farmers",
-        ecoPrice: eco.Farmer_Price,
-        nonEcoPrice: nonEco.Farmer_Price
+        ecoPrice: eco.customer_to_farmer,
+        nonEcoPrice: nonEco.customer_to_farmer
+    }, {
+        group: "Logistics",
+        ecoPrice: eco.customer_to_logistics,
+        nonEcoPrice: nonEco.customer_to_logistics
     }, {
         group: "Red Tomato",
-        ecoPrice: eco.RT_Price,
-        nonEcoPrice: nonEco.RT_Price
+        ecoPrice: eco.customer_to_RT,
+        nonEcoPrice: nonEco.customer_to_RT
     }, {
-        group: "Retail",
-        ecoPrice: eco.Retail_Price,
-        nonEcoPrice: nonEco.Retail_Price
+        group: "Total",
+        ecoPrice: eco.total_customer_price,
+        nonEcoPrice: nonEco.total_customer_price
     }];
 }
 
