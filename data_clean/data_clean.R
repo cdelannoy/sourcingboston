@@ -1,5 +1,6 @@
 library(tidyverse)
 library(openxlsx)
+library(tools)
 
 ##### Read files
 
@@ -105,8 +106,6 @@ final <- ps %>%
          customer_to_RT = Gross_profit_per_muom,
          total_customer_price = Ave_price_each)
 
-write.csv(final, file.path(output_dir, "cleaned_data.csv"), row.names = FALSE)
-
 # TO DO, remove Eco from Apple Eco Fuji (it has an E in the itemcode)
 # gsub out "bu" from the end of item_group
 # McIntosh vs mcintosh
@@ -117,7 +116,26 @@ write.csv(final, file.path(output_dir, "cleaned_data.csv"), row.names = FALSE)
 # FCY/XFCY
 # HRML vs Hrml
 
-unique(final$Item_group)
+final <- final %>% 
+  mutate(Item_group_clean = tolower(Item_group))
+
+final <- final %>% 
+  mutate(Item_group_clean = trimws(Item_group_clean),
+         Item_group_clean = gsub(" bu$", "", Item_group_clean),
+         Item_group_clean = trimws(Item_group_clean),
+         Item_group_clean = gsub("eco", "", Item_group_clean),
+         Item_group_clean = gsub(".*apple red d.*", "apple red delicious", Item_group_clean),
+         Item_group_clean = gsub("  ", " ", Item_group_clean),
+         Item_group_clean = tools::toTitleCase(Item_group_clean)) 
+
+
+final <- final[order(final$Item_group_clean),]
+         
+
+# Get rid of negative values
+final_final <- final %>% filter(customer_to_RT >= 0)
+
+write.csv(final, file.path(output_dir, "cleaned_data_final.csv"), row.names = FALSE)
 
 
 
